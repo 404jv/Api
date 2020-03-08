@@ -7,19 +7,24 @@ const Product = require("../models/Product")
 module.exports = {
 
     async store(req, res) {
-        const { name, age, email } = req.body
+        const user = { name, age, email } = req.body
         
+        if (!user.name || !user.age || !user.email) {
+            return res.status(422).json()
+        }
+
         const product = Product.create({
             name,
             age,
             email,
-        })
+        }).catch(() => { return res.status(404).json() })
 
-        return res.json(product)
+        return res.status(201).json(product)
+
     },
 
     async index(req, res) {
-        const products = await Product.find()
+        const products = await Product.find().catch(() => { return res.status(404).json() })
 
         return res.json(products)
     },
@@ -31,22 +36,22 @@ module.exports = {
             return res.json(product)
 
         } catch (err) {
-            if (err.kind === "ObjectId") return res.status(204).json()
+            if (err.kind === "ObjectId") return res.status(404).json()
         }
     },
 
     async update(req, res) {
-            try {
-                const product = await Product.findByIdAndUpdate(
-                        req.params.id, 
-                        req.body, 
-                        { new: true }
-                    )
+        try {
+            const product = await Product.findByIdAndUpdate(
+                    req.params.id, 
+                    req.body, 
+                    { new: true }
+            )
 
-                return res.json(product)
-            } catch (err) {
-                if (err.kind === "ObjectId") return res.status(204).json()
-            }
+            return res.send(204).json(product)
+        } catch (err) {
+            if (err.kind === "ObjectId") return res.status(404).json()
+        }
     },
     
     async destroy(req, res) {
@@ -55,7 +60,7 @@ module.exports = {
 
             return res.send()
         } catch (err) {
-            if (err.kind === "ObjectId") return res.status(204).json()
+            if (err.kind === "ObjectId") return res.status(404).json()
         }
     }
 }
