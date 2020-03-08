@@ -26,8 +26,7 @@ module.exports = {
 
     async show(req, res) {
         try {
-            const { id } = req.params
-            const product = await Product.findById(id)
+            const product = await Product.findById(req.params.id)
 
             return res.json(product)
 
@@ -38,9 +37,11 @@ module.exports = {
 
     async update(req, res) {
             try {
-                const { id } = req.params
-                
-                const product = await Product.findByIdAndUpdate(id, req.body, { new: true })
+                const product = await Product.findByIdAndUpdate(
+                        req.params.id, 
+                        req.body, 
+                        { new: true }
+                    )
 
                 return res.json(product)
             } catch (err) {
@@ -50,9 +51,7 @@ module.exports = {
     
     async destroy(req, res) {
         try {
-            const { id } = req.params
-
-            await Product.findByIdAndRemove(id)
+            await Product.findByIdAndRemove(req.params.id)
 
             return res.send()
         } catch (err) {
