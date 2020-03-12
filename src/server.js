@@ -6,7 +6,7 @@ const app = express()
 app.use(express.json())
 app.use(routes)
 
-mongoose.connect('mongodb+srv://root:frances321321@cluster0-cyb56.mongodb.net/test?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://root:<password>@cluster0-cyb56.mongodb.net/test?retryWrites=true&w=majority', 
     {
         useUnifiedTopology: true,
         useNewUrlParser: true,
